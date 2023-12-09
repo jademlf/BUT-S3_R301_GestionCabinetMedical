@@ -68,9 +68,9 @@ if (isset($_POST['mots_cles'])) {
                     <td>' . $row['nom'] . '</td>
                     <td>' . $row['prénom'] . '</td>
                     <td>
-                        <a href="modificationUsager.php?id=' . $row['id_usager'] . '">Modifier</a>
+                        <a href="modificationMedecin.php?id='.$row['ID_Usager'].'">Modifier</a>
                         <p>ou</p>
-                        <a href="suppressionUsager.php?id=' . $row['id_usager'] . '">Supprimer</a>
+                        <a href="suppressionMedecin.php?id='.$row['ID_Usager'].'">Supprimer</a>
                     </td>
                   </tr>';
         }
