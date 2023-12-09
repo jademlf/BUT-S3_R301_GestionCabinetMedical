@@ -6,24 +6,11 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-    
-    // Votre configuration de connexion à la base de données
-    $server = 'localhost';
-    $login = 'root';
-    $mdp = '';
-    $db = 'projet_php';
+<?php include 'menu.php'; 
 
-    try {
-        // Établir la connexion à la base de données
-        $linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-        // Configurer PDO pour afficher les erreurs SQL
-        $linkpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die('Erreur : ' . $e->getMessage());
-    }
+
+    
+include 'connexion_bd.php';
 
     if (isset($_GET['id'])) {
         // Récupérer l'identifiant du médecin depuis l'URL

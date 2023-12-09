@@ -7,23 +7,7 @@
 
     </head>
 <body>
-    <nav>
-        <ul id="menu">
-            <li><a href="accueil.php">Accueil</a>
-            <li><a href="rendezVous.php"> Rendez-vous </a></li>
-            </li><li><a href="affichageMedecin.php">Médecins</a>
-                <ul>
-                    <li><a href="ajoutMedecin.php">Ajout</a></li>
-                    <li><a href="rechercheMedecin.php">Recherche</a></li>
-                </ul>
-            </li><li><a href="affichageUsager.php">Usagers</a>
-                <ul>
-                    <li><a href="ajoutUsager.php">Ajout</a></li>
-                    <li><a href="rechercheUsager.php">Recherche</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'menu.php'; ?>
            
 <h1>Recherche Medecin</h1>
 
@@ -34,22 +18,12 @@
 </form>
 
 <?php
-// Votre configuration de connexion à la base de données
-$server = 'localhost';
-$login = 'root';
-$mdp = '';
-$db = 'projet_php';
-
-try {
-    $linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-} catch (PDOException $e) {
-    die('Erreur : ' . $e->getMessage());
-}
+ include 'connexion_bd.php';
 
 // Traitement du formulaire
 if (isset($_POST['mots_cles'])) {
     $mots_cles = $_POST['mots_cles'];
-    $query = $linkpdo->prepare('SELECT civilité,nom,prénom FROM Medecins WHERE nom LIKE :mots_cles OR prénom LIKE :mots_cles');
+    $query = $linkpdo->prepare('SELECT ID_Medecin, civilité,nom,prénom FROM Medecins WHERE nom LIKE :mots_cles OR prénom LIKE :mots_cles');
     $query->execute(array('mots_cles' => "%$mots_cles%"));
 
     if ($query->rowCount() > 0) {
@@ -68,9 +42,9 @@ if (isset($_POST['mots_cles'])) {
                     <td>' . $row['nom'] . '</td>
                     <td>' . $row['prénom'] . '</td>
                     <td>
-                        <a href="modificationMedecin.php?id='.$row['ID_Usager'].'">Modifier</a>
+                        <a href="modificationMedecin.php?id='.$row['ID_Medecin'].'">Modifier</a>
                         <p>ou</p>
-                        <a href="suppressionMedecin.php?id='.$row['ID_Usager'].'">Supprimer</a>
+                        <a href="suppressionMedecin.php?id='.$row['ID_Medecin'].'">Supprimer</a>
                     </td>
                   </tr>';
         }

@@ -6,29 +6,11 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <nav>
-        <ul id="menu">
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="rendezVous.php"> Rendez-vous </a></li>
-            <li><a href="affichageMedecin.php">Médecins</a>
-                <ul>
-                    <li><a href="ajoutMedecin.php">Ajout</a></li>
-                    <li><a href="rechercheMedecin.php">Recherche</a></li>
-                </ul>
-            </li>
-            <li><a href="affichageUsager.php">Usagers</a>
-                <ul>
-                    <li><a href="ajoutUsager.php">Ajout</a></li>
-                    <li><a href="rechercheUsager.php">Recherche</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-
+    <?php include 'menu.php'; ?>
     <h1>Statistiques</h1>
 
     <?php
-    // Supposons que vous ayez accès à la base de données et aux données nécessaires.
+     include 'connexion_bd.php';
     
     // Calcul des statistiques sur la répartition des usagers par sexe et âge
     // (vous devrez remplacer les valeurs fictives par les données réelles de votre base de données)

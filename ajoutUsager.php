@@ -8,40 +8,13 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
-        <ul id="menu">
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="rendezVous.php">Rendez-vous</a></li>
-            <li><a href="affichageMedecin.php">Médecins</a>
-                <ul>
-                    <li><a href="ajoutMedecin.php">Ajout</a></li>
-                    <li><a href="rechercheMedecin.php">Recherche</a></li>
-                </ul>
-            </li>
-            <li><a href="affichageUsager.php">Usagers</a>
-                <ul>
-                    <li><a href="ajoutUsager.php">Ajout</a></li>
-                    <li><a href="rechercheUsager.php">Recherche</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'menu.php'; ?>
 
     <div class="container">
         <h1>Ajout d'un Usager</h1>
 
         <?php
-        // Votre configuration de connexion à la base de données
-        $server = 'localhost';
-        $login = 'root';
-        $mdp = '';
-        $db = 'projet_php';
-
-        try {
-            $linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+         include 'connexion_bd.php';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $civilite = $_POST['civilite'];
