@@ -1,3 +1,5 @@
+<?php include 'verificationUtilisateur.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,44 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajout d'un Médecin</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="menu.css">
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
-        <ul id="menu">
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="rendezVous.php">Rendez-vous</a></li>
-            <li><a href="affichageMedecin.php">Médecins</a>
-                <ul>
-                    <li><a href="ajoutMedecin.php">Ajout</a></li>
-                    <li><a href="rechercheMedecin.php">Recherche</a></li>
-                </ul>
-            </li>
-            <li><a href="affichageUsager.php">Usagers</a>
-                <ul>
-                    <li><a href="ajoutUsager.php">Ajout</a></li>
-                    <li><a href="rechercheUsager.php">Recherche</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'menu.php'; ?>
 
     <div class="container">
         <h1>Ajout d'un Médecin</h1>
 
         <?php
-            // Informations de connexion à la base de données
-            $server = 'localhost';
-            $login = 'root';
-            $mdp = '';
-            $db = 'projet_php';
-
-            try {
-                // Connexion à la base de données
-                $linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-            } catch (PDOException $e) {
-                die('Erreur : ' . $e->getMessage());
-            }
+             include 'connexion_bd.php';
 
             // Vérification si le formulaire a été soumis
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -79,7 +54,7 @@
                 }
             }
         ?>
-
+        
         <!-- Formulaire d'ajout d'un médecin -->
         <form action="ajoutMedecin.php" method="post">
             <label>Civilité :</label>

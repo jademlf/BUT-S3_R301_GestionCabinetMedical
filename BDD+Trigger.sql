@@ -22,7 +22,6 @@ CREATE TABLE Usagers (
     UNIQUE(Nom, Prénom, DateNaissance)
 );
 
-
 CREATE TABLE RendezVous (
     ID_RendezVous INT AUTO_INCREMENT PRIMARY KEY,
     DateConsultation DATE,
@@ -33,6 +32,12 @@ CREATE TABLE RendezVous (
     FOREIGN KEY (ID_Usager) REFERENCES Usagers(ID_Usager),
     FOREIGN KEY (ID_Medecin) REFERENCES Medecins(ID_Medecin),
     UNIQUE (ID_Usager, DateConsultation, HeureConsultation)
+);
+
+CREATE TABLE Utilisateurs (
+    ID_Utilisateur INT AUTO_INCREMENT PRIMARY KEY,
+    NomUtilisateur VARCHAR(50) UNIQUE NOT NULL,
+    MotDePasse VARCHAR(255) NOT NULL
 );
 
 ------------------------------------------------------------------
@@ -67,6 +72,36 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+-----------------------
+
+DELIMITER //
+CREATE TRIGGER before_insert_usagers
+BEFORE INSERT ON Usagers
+FOR EACH ROW
+BEGIN
+    -- Vérifier le format du numéro de sécurité sociale
+    IF NEW.NumSecuSociale IS NOT NULL AND NEW.NumSecuSociale NOT REGEXP '^[1-37-8][0-9]{12}$' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Format invalide pour le numéro de sécurité sociale.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER before_update_usagers
+BEFORE UPDATE ON Usagers
+FOR EACH ROW
+BEGIN
+    -- Vérifier le format du numéro de sécurité sociale
+    IF NEW.NumSecuSociale IS NOT NULL AND NEW.NumSecuSociale NOT REGEXP '^[1-37-8][0-9]{12}$' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Format invalide pour le numéro de sécurité sociale.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+
 
 ------------------------------------------------------------------
 ------------------------ RENDEZ-VOUS -----------------------------

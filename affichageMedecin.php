@@ -1,43 +1,20 @@
+<?php include 'verificationUtilisateur.php'; ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Liste des médecins</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="menu.css">
 </head>
 <body>
-    <nav>
-        <ul id="menu">
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="rendezVous.php"> Rendez-vous </a></li>
-            <li><a href="affichageMedecin.php">Médecins</a>
-                <ul>
-                    <li><a href="ajoutMedecin.php">Ajout</a></li>
-                    <li><a href="rechercheMedecin.php">Recherche</a></li>
-                </ul>
-            </li>
-            <li><a href="affichageUsager.php">Usagers</a>
-                <ul>
-                    <li><a href="ajoutUsager.php">Ajout</a></li>
-                    <li><a href="rechercheUsager.php">Recherche</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <?php include 'menu.php'; ?>
 
     <h1>Liste des médecins</h1>
 
     <?php
-    $server = 'localhost';
-    $login = 'root';
-    $mdp = '';
-    $db = 'projet_php';
-
-    try {
-        $linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-    } catch (PDOException $e) {
-        die('Erreur : ' . $e->getMessage());
-    }
+    include 'connexion_bd.php';
 
     // Sélectionner le nombre total de médecins
     $queryTotal = $linkpdo->query('SELECT COUNT(*) AS total FROM Medecins');
@@ -51,7 +28,7 @@
     $offset = ($page - 1) * 10;
 
     // Sélectionnez les médecins pour la page actuelle
-    $query = $linkpdo->query("SELECT civilité, nom, prénom FROM Medecins LIMIT $offset, 10");
+    $query = $linkpdo->query("SELECT civilité, nom, prénom FROM Medecins ORDER BY nom LIMIT $offset, 10");
 
     if ($query->rowCount() > 0) {
         echo '<table>

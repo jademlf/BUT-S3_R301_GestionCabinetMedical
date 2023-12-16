@@ -1,29 +1,17 @@
+<?php include 'verificationUtilisateur.php'; ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Suppression d'Usager</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="menu.css">
 </head>
 <body>
-    <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
+<?php include 'menu.php'; 
     
-    // Votre configuration de connexion à la base de données
-    $server = 'localhost';
-    $login = 'root';
-    $mdp = '';
-    $db = 'projet_php';
-
-    try {
-        // Établir la connexion à la base de données
-        $linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-        // Configurer PDO pour afficher les erreurs SQL
-        $linkpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die('Erreur : ' . $e->getMessage());
-    }
+    include 'connexion_bd.php';
 
     if (isset($_GET['id'])) {
         // Récupérer l'identifiant de l'usager depuis l'URL
@@ -63,13 +51,27 @@
                 }
             }
 
-            // Afficher un message de confirmation avec des boutons radio stylisés
-            echo '<h1>Confirmation de suppression</h1>';
-            echo '<p>Êtes-vous sûr de vouloir supprimer l\'usager suivant ?</p>';
-            echo '<p>Nom : ' . $usager['Nom'] . '</p>';
-            echo '<p>Prénom : ' . $usager['Prénom'] . '</p>';
-            echo '<form method="POST" action="suppressionUsager.php?id=' . $id . '">';
-            echo '<div>';
+        // Ajoutez le code suivant pour récupérer les détails du médecin référent
+        $medecinReferentQuery = $linkpdo->prepare('SELECT Nom, Prénom FROM Medecins WHERE ID_Medecin = :medecinId');
+        $medecinReferentQuery->execute(array('medecinId' => $usager['MédecinRéférent']));
+        $medecinReferentDetails = $medecinReferentQuery->fetch();
+
+        // Affichez les détails de confirmation avec le nom et le prénom du médecin référent
+        echo '<h1>Confirmation de suppression</h1>';
+        echo '<p>Êtes-vous sûr de vouloir supprimer l\'usager suivant ?</p>';
+        echo '<p>Civilité : ' . $usager['Civilité'] . '</p>';
+        echo '<p>Nom : ' . $usager['Nom'] . '</p>';
+        echo '<p>Prénom : ' . $usager['Prénom'] . '</p>';
+        echo '<p>Adresse : ' . $usager['Adresse'] . '</p>';
+        echo '<p>Ville : ' . $usager['Ville'] . '</p>';
+        echo '<p>Code postal : ' . $usager['Cp'] . '</p>';
+        echo '<p>Date de naissance : ' . $usager['DateNaissance'] . '</p>';
+        echo '<p>Lieu de naissance : ' . $usager['LieuNaissance'] . '</p>';
+        echo '<p>Numero de Securite Sociale : ' . $usager['NumSecuSociale'] . '</p>';
+        echo '<p>Médecin Référent : ' . $medecinReferentDetails['Nom'] . ' ' . $medecinReferentDetails['Prénom'] . '</p>';
+        echo '<form method="POST" action="suppressionUsager.php?id=' . $id . '">';
+            
+        echo '<div>';
             echo '<label for="oui">Oui</label>';
             echo '<input type="radio" name="confirmation" id="oui" value="oui" required>';
             echo '</div>';
