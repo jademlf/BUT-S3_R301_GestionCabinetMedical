@@ -1,6 +1,5 @@
 <?php include 'verificationUtilisateur.php'; ?>
 
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
