@@ -1,6 +1,6 @@
 CREATE TABLE Medecins (
     ID_Medecin INT AUTO_INCREMENT PRIMARY KEY,
-    Civilité VARCHAR(10),
+    Civilité CHAR(1) CHECK (Civilité IN ('F', 'M')),
     Nom VARCHAR(50),
     Prénom VARCHAR(50),
     UNIQUE(Civilité, Nom, Prénom)

@@ -1,5 +1,5 @@
 <?php
-// Inclure le fichier de connexion à la base de données (connexion_bd.php)
+// Inclure le fichier de connexion à la base de données 
 include 'connexion_bd.php';
 
 // Vérifier si l'utilisateur est déjà connecté en vérifiant la présence de la variable de session
@@ -13,7 +13,7 @@ if (isset($_SESSION['id_utilisateur'])) {
 // Traitement du formulaire de connexion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Appeler votre script d'authentification (authentifier.php ou autre)
-    include 'authentifier.php'; // Assurez-vous d'adapter le nom du fichier selon votre structure
+    include 'authentifier.php'; 
 }
 ?>
 
@@ -25,14 +25,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" type="text/css" href="connexion.css">
 </head>
 <body>
+    <!-- Titre de la page -->
     <h1>Connexion</h1>
+
+    <!-- Formulaire de connexion -->
     <form action="login.php" method="post">
+        <!-- Champ pour le nom d'utilisateur -->
         <label for="nom_utilisateur">Nom d'utilisateur :</label>
         <input type="text" id="nom_utilisateur" name="nom_utilisateur" required><br>
 
+        <!-- Champ pour le mot de passe -->
         <label for="mot_de_passe">Mot de passe :</label>
         <input type="password" id="mot_de_passe" name="mot_de_passe" required><br>
 
+        <!-- Bouton de soumission du formulaire -->
         <input type="submit" value="Se connecter">
     </form>
 </body>

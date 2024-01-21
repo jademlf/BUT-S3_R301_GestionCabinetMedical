@@ -9,66 +9,78 @@
     <link rel="stylesheet" type="text/css" href="menu.css">
 </head>
 <body>
-    <?php include 'menu.php'; ?>
+    <?php 
+        include 'menu.php'; // Menu de navigation
+        include 'connexion_bd.php'; // Connexion à la BD
 
-    <h1>Liste des usagers</h1>
+        // Sélectionner le nombre total d'usagers
+        $queryTotal = $linkpdo->query('SELECT COUNT(*) AS total FROM usagers');
+        $resultTotal = $queryTotal->fetch();
+        $totalPages = ceil($resultTotal['total'] / 10); // 10 usagers par page
 
-    <?php
-    include 'connexion_bd.php';
+        // Récupérer le numéro de page à partir de l'URL, par défaut 1
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 
-    // Sélectionnez le nombre total d'usagers
-    $queryTotal = $linkpdo->query('SELECT COUNT(*) AS total FROM Usagers');
-    $resultTotal = $queryTotal->fetch();
-    $totalPages = ceil($resultTotal['total'] / 10); // 10 usagers par page
+        // Calculer l'offset
+        $offset = ($page - 1) * 10;
 
-    // Récupérer le numéro de page à partir de l'URL, par défaut 1
-    $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        // Sélectionner les usagers pour la page actuelle
+        $query = $linkpdo->query("SELECT ID_Usager, civilité, nom, prénom, DateNaissance, MédecinRéférent FROM usagers ORDER BY usagers.nom LIMIT $offset, 10");
 
-    // Calculer l'offset
-    $offset = ($page - 1) * 10;
+        if ($query->rowCount() > 0) {
+            echo '<h1>Liste des usagers</h1><section>';
+            echo '<table>
+                    <tr>
+                        <th>Civilité</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Date de naissance</th>
+                        <th>Médecin Référent</th>
+                    </tr>';
 
-    // Sélectionnez les usagers pour la page actuelle
-    $query = $linkpdo->query("SELECT ID_Usager, civilité, nom, prénom, DateNaissance, MédecinRéférent  FROM Usagers ORDER BY Usagers.nom LIMIT $offset, 10");
+            // Parcourir les résultats de la requête des usagers
+            while ($row = $query->fetch()) {
+                // Récupérer l'identifiant du médecin référent à partir des résultats de la requête des usagers
+                $medecinReferentId = $row['MédecinRéférent'];
 
-    if ($query->rowCount() > 0) {
-        echo '<table>
-                <tr>
-                    <th>Civilité</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Date de naissance</th>
-                    <th>Médecin Référent</th>
-                </tr>';
+                // Vérifier si un médecin référent est associé à cet usager
+                if ($medecinReferentId !== null) {
+                    // Requête pour récupérer le nom et prénom du médecin référent à partir de la table des médecins
+                    $queryMedecin = $linkpdo->query("SELECT nom, prénom FROM medecins WHERE ID_Medecin = $medecinReferentId");
+                    $medecinRow = $queryMedecin->fetch();
 
-        while ($row = $query->fetch()) {
-            // Récupérer le nom et prénom du médecin référent à partir de la table des médecins
-            $medecinReferentId = $row['MédecinRéférent'];
-            $queryMedecin = $linkpdo->query("SELECT nom, prénom FROM Medecins WHERE ID_Medecin = $medecinReferentId");
-            $medecinRow = $queryMedecin->fetch();
+                    // Construire l'information du médecin référent
+                    $medecinReferentInfo = $medecinRow['nom'] . ' ' . $medecinRow['prénom'];
+                } else {
+                    // Aucun médecin référent associé à cet usager
+                    $medecinReferentInfo = 'Non renseigné';
+                }
 
-            // Formater la date au format français
-            $dateNaissance = strftime('%d/%m/%Y', strtotime($row['DateNaissance']));
+                // Formater la date de naissance au format français
+                $dateNaissance = strftime('%d/%m/%Y', strtotime($row['DateNaissance']));
 
-            echo '<tr>
-                    <td>' . $row['civilité'] . '</td>
-                    <td>' . $row['nom'] . '</td>
-                    <td>' . $row['prénom'] . '</td>
-                    <td>' . $dateNaissance . '</td>
-                    <td>' . $medecinRow['nom'] . ' ' . $medecinRow['prénom'] . '</td>
-                  </tr>';
+                // Afficher les informations de l'usager dans une ligne du tableau HTML
+                echo '<tr>
+                        <td>' . $row['civilité'] . '</td>
+                        <td>' . $row['nom'] . '</td>
+                        <td>' . $row['prénom'] . '</td>
+                        <td>' . $dateNaissance . '</td>
+                        <td>' . $medecinReferentInfo . '</td>
+                    </tr>';
+            }
+
+            echo '</table>';
+        } else {
+            // Aucun usager trouvé
+            echo 'Aucun usager trouvé.';
         }
 
-        echo '</table>';
-    } else {
-        echo 'Aucun usager trouvé.';
-    }
-
-    // Afficher les liens de pagination
-    echo '<div class="pagination">';
-    for ($i = 1; $i <= $totalPages; $i++) {
-        echo '<a href="?page=' . $i . '">' . $i . '</a>';
-    }
-    echo '</div>';
+        // Afficher les liens de pagination
+        echo '<div class="pagination">';
+        for ($i = 1; $i <= $totalPages; $i++) {
+            echo '<a href="?page=' . $i . '">' . $i . '</a>';
+        }
+        echo '</div> </section>';
     ?>
 </body>
 </html>

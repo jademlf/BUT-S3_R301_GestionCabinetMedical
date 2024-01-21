@@ -19,5 +19,8 @@
                 <li><a href="rechercheUsager.php">Recherche</a></li>
             </ul>
         </li>
+        <li class="deconnexion"><a href="deconnexion.php">Déconnexion ►</a></li>
+
     </ul>
 </nav>
+
